@@ -1,0 +1,113 @@
+﻿@model MvcApplication2.Models.T2
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+   <head>
+      <title></title>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+      <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>       <script src="~/Script/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+    var map = null;
+   
+    var shape;
+    function GetMap1(Latitude, Longitude) {
+        var loc=[];
+        var pin =[];
+        //alert(Latitude);
+        // Initialize the map
+     map = new Microsoft.Maps.Map(document.getElementById("myMap"), { credentials: "AmJnm321kNaBNwBAB6KE2B6id4qUs7DcAS-tkfS_tG89XJ3Z_ltTUfrLhDFQOF60", mapTypeId: Microsoft.Maps.MapTypeId.road });
+        for (var i = 0; i < 2; i++) {
+          //  alert(Latitude[i]);
+            loc.push(new Microsoft.Maps.Location(Latitude[i], Longitude[i]));
+            
+
+            // Add a pin to the map
+            pin.push( new Microsoft.Maps.Pushpin(loc[i]));
+        }
+        //alert(loc);
+        //alert(pin);
+        // Create a polyline
+       // var lineVertices = new Array(loc);
+        var line = new Microsoft.Maps.Polyline(loc);
+        //alert(line);
+        map.setView({ center: loc2, zoom: 9 });
+
+        map.entities.push(line);
+        for (var i = 0; i < 2; i++) {
+            map.entities.push(pin[i]);
+        }
+    }
+    
+
+    function GetMap(lat, long) {
+        // Initialize the map
+        map = new Microsoft.Maps.Map(document.getElementById("myMap"), { credentials: "AmJnm321kNaBNwBAB6KE2B6id4qUs7DcAS-tkfS_tG89XJ3Z_ltTUfrLhDFQOF60", mapTypeId: Microsoft.Maps.MapTypeId.road });
+        Microsoft.Maps.loadModule('Microsoft.Maps.Directions', { callback: function () { directionsModuleLoaded(lat, long); } });
+    }
+
+
+
+    function directionsModuleLoaded(lat, long) {
+        // Initialize the DirectionsManager
+       // alert(lat);
+       // alert(long);
+        var startWaypoint=[];
+        directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+        for (var i = 0; i < lat.length; i++) {
+            // Create start and end waypoints
+            startWaypoint.push(new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(lat[i], long[i]) }));
+            // var endWaypoint = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(lat[1], long[1]) });
+
+            directionsManager.addWaypoint(startWaypoint[i]);
+            //directionsManager.addWaypoint(endWaypoint);
+        }
+        // Set request options
+        directionsManager.setRequestOptions({ avoidTraffic: true, maxRoutes: 1 });
+
+        // Set the render options
+        directionsManager.setRenderOptions({ itineraryContainer: document.getElementById('itineraryDiv'), displayWalkingWarning: false, walkingPolylineOptions: { strokeColor: new Microsoft.Maps.Color(200, 0, 255, 0) } });
+
+        // Specify a handler for when an error occurs
+        Microsoft.Maps.Events.addHandler(directionsManager, 'directionsError', displayError);
+
+        // Calculate directions, which displays a route on the map
+        directionsManager.calculateDirections();
+    }
+
+    function displayError(e) {
+        // Display the error message
+        //alert(e.message);
+    }
+    $(document).ready(function () {
+       
+        var i=@Model.IMIE
+        //call the action created to retrieve the data
+        $.post('/Home/Locations?u='+i, function (data) {
+            var lat = [];
+            var long = [];
+            //iterate through the 'data' retireved
+            $.each(data, function (item, location) {
+          //      alert(location.LAT);
+            //    alert(location.LONG);
+                //AddLocationPin(location.LAT, location.LONG);
+                lat.push(location.LAT);
+                long.push(location.LONG);
+            });
+            GetMap(lat, long);
+           // directionsModuleLoaded(latitude, longitude)
+           //GetMap1(lat, long);
+        });
+        
+    });
+
+</script>
+    </head>
+    <body>
+  
+        <h1 align="center">SRATS</h1>
+        <div id='myMap' align="center"style="position:relative; width:1700px; height:700px; "></div>
+    
+        
+    </body>
+</html>
