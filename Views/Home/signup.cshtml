@@ -104,7 +104,7 @@
 
                                   var userName = $('#UserName').val();
 
-                                  //alert('User Name ='+ userName);
+                                  alert('User Name ='+ userName);
                                   $('#checking').show();
                                   $.getJSON("/Home/CheckUserName?UserName=" + userName, function (data) {
                                       $('#checking').hide();
