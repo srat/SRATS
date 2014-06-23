@@ -9,28 +9,32 @@
       <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>       <script src="~/Script/jquery-1.10.2.js"></script>
 <script type="text/javascript">
     var map = null;
-   
+    //function GetMap() 
+    //    map = new VEMap('myMap');
+    //    map.LoadMap();
+    //   // map.LoadMap(new VELatLong(31.545050000000000000, 74.340683000000010000), 10, 'Road', false);
+    //}
     var shape;
     function GetMap1(Latitude, Longitude) {
-        var loc=[];
-        var pin =[];
-        //alert(Latitude);
+        var loc = [];
+        var pin = [];
+        alert(Latitude);
         // Initialize the map
-     map = new Microsoft.Maps.Map(document.getElementById("myMap"), { credentials: "AmJnm321kNaBNwBAB6KE2B6id4qUs7DcAS-tkfS_tG89XJ3Z_ltTUfrLhDFQOF60", mapTypeId: Microsoft.Maps.MapTypeId.road });
+        map = new Microsoft.Maps.Map(document.getElementById("myMap"), { credentials: "AmJnm321kNaBNwBAB6KE2B6id4qUs7DcAS-tkfS_tG89XJ3Z_ltTUfrLhDFQOF60", mapTypeId: Microsoft.Maps.MapTypeId.road });
         for (var i = 0; i < 2; i++) {
-          //  alert(Latitude[i]);
+            alert(Latitude[i]);
             loc.push(new Microsoft.Maps.Location(Latitude[i], Longitude[i]));
-            
+
 
             // Add a pin to the map
-            pin.push( new Microsoft.Maps.Pushpin(loc[i]));
+            pin.push(new Microsoft.Maps.Pushpin(loc[i]));
         }
-        //alert(loc);
-        //alert(pin);
+        alert(loc);
+        alert(pin);
         // Create a polyline
-       // var lineVertices = new Array(loc);
+        // var lineVertices = new Array(loc);
         var line = new Microsoft.Maps.Polyline(loc);
-        //alert(line);
+        alert(line);
         map.setView({ center: loc2, zoom: 9 });
 
         map.entities.push(line);
@@ -38,7 +42,7 @@
             map.entities.push(pin[i]);
         }
     }
-    
+
 
     function GetMap(lat, long) {
         // Initialize the map
@@ -50,9 +54,9 @@
 
     function directionsModuleLoaded(lat, long) {
         // Initialize the DirectionsManager
-       // alert(lat);
-       // alert(long);
-        var startWaypoint=[];
+        alert(lat);
+        alert(long);
+        var startWaypoint = [];
         directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
         for (var i = 0; i < lat.length; i++) {
             // Create start and end waypoints
@@ -77,28 +81,28 @@
 
     function displayError(e) {
         // Display the error message
-        //alert(e.message);
+        alert(e.message);
     }
     $(document).ready(function () {
-       
-        var i=@Model.IMIE
+
+        var i =@Model.IMIE
         //call the action created to retrieve the data
-        $.post('/Home/Locations?u='+i, function (data) {
+        $.post('/Home/Locations?u=' + i, function (data) {
             var lat = [];
             var long = [];
             //iterate through the 'data' retireved
             $.each(data, function (item, location) {
-          //      alert(location.LAT);
-            //    alert(location.LONG);
+                alert(location.LAT);
+                alert(location.LONG);
                 //AddLocationPin(location.LAT, location.LONG);
                 lat.push(location.LAT);
                 long.push(location.LONG);
             });
             GetMap(lat, long);
-           // directionsModuleLoaded(latitude, longitude)
-           //GetMap1(lat, long);
+            // directionsModuleLoaded(latitude, longitude)
+            //GetMap1(lat, long);
         });
-        
+
     });
 
 </script>
